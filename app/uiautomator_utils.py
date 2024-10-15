@@ -1,14 +1,21 @@
 import uiautomator2 as u2
 import time
+from lib.proxy import change_proxy
 
-def interact_with_device(device):
+def interact_with_device(data):
     """
     Kết nối và tương tác với thiết bị qua uiautomator2.
     """
+
+    device = data
+    # proxy_address = data['proxy_address']
+    # proxy_port = data['proxy_port']
+    # change_proxy(device, proxy_address, proxy_port)
+
     try:
         print(f"Connecting to device: {device}")
         d = u2.connect(device)
-        clear_all_page(d)
+        # clear_all_page(device)
 
         print(f"Interacting with device: {device}")
         time.sleep(2)

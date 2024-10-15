@@ -1,0 +1,13 @@
+Khởi động
+LDConsole.exe launch --index 0  # Khởi động LDPlayer đầu tiên
+LDConsole.exe launch --index 1  # Khởi động LDPlayer thứ hai
+
+Danh sách
+LDConsole.exe list: xem danh sách device
+
+Copy
+LDConsole.exe copy --from 0 : copy 1 deivce mới
+LDConsole.exe copy --name test_12 --from 0: copy và đặt tên
+
+rename 
+LDConsole.exe rename --index 1 --title "new-name"
