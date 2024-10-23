@@ -17,6 +17,6 @@ for _ in range(1000):  # Mỗi nhà mạng lấy khoảng 333 số để tổng 
     phone_numbers.append(generate_phone_number(random.choice(vinaphone_prefixes)))
 
 # Ghi danh sách số điện thoại vào file
-with open('phone_number.txt', 'w') as f:
+with open('phone_numbers.txt', 'w') as f:
     for number in phone_numbers:
         f.write(number + '\n')
