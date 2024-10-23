@@ -42,3 +42,6 @@ def connect_uiautomator2(device_ip):
         print(f"Không thể kết nối với thiết bị: {device_ip}")
     return d
  
+
+async def main():
+    await start_ldplayer(0)
