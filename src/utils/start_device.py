@@ -2,11 +2,11 @@ import os
 import time
 import asyncio
 import uiautomator2 as u2
-from adb_utils import run_adb_devices
+from src.utils.adb_utils import run_adb_devices
 
 # Function để khởi động LDPlayer dựa vào index
 async def start_ldplayer(index):
-    command = f'D:\LDPlayer\LDPlayer9\LDConsole.exe launch --index {index}'
+    command = f'E:\LDPlayer\LDPlayer9\LDConsole.exe launch --index {index}'
     os.system(command)
     print(f"Đang khởi động LDPlayer với index {index}...")
     await  wait_for_device_online()

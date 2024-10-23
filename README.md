@@ -45,6 +45,11 @@ Bạn có thể sao chép thiết bị bằng các lệnh sau:
   ```bash
   LDConsole.exe copy --name doanthanhluc91bvh@gmail.com --from 0
   ```
+  
+- Update số điện thoại
+  ```bash
+  LDConsole.exe modify --name doanthanhluc91bvh@gmail.com --pnumber 11111111
+  ```
 
 ## Đổi tên thiết bị
 

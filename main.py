@@ -1,8 +1,8 @@
 import threading
 import asyncio
-from adb_utils import run_adb_devices
-from app.uiautomator_utils import interact_with_device
-from devices.start_device  import start_ldplayer
+from src.utils.adb_utils import run_adb_devices
+from src.app.uiautomator_utils import interact_with_device
+from utils.start_device  import start_ldplayer
 import json
 import subprocess
 import sys
