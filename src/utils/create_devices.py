@@ -1,8 +1,9 @@
 import json
 import sys
 import os
+import asyncio
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from src.utils.adb_utils import get_ld_devices, get_random_manufacturer_and_model, get_random_phone_number, get_random_proxy, set_phone_model, copy_adb_devices, set_phone_number
+from src.utils.adb_utils import close_ldplayer, get_ld_devices, get_random_manufacturer_and_model, get_random_phone_number, get_random_proxy, set_phone_model, copy_adb_devices, set_phone_number, start_ldplayer
 from src.utils.revove_devices import remove_nonexistent_devices
 from src.utils.const import output_file_path, email_file_path, ldconsole_path
 
@@ -15,7 +16,6 @@ def find_email_index(email):
             return index
     return -1
 
-
 def create_json_object(parts):
     index = find_email_index(parts[0])
     return {
@@ -25,12 +25,12 @@ def create_json_object(parts):
         "proxy":  jsonData[index]['proxy'] if index != -1 and jsonData[index]['proxy'] else get_random_proxy(),
         "device": jsonData[index]['device'] if index != -1 and jsonData[index]['device'] else get_random_manufacturer_and_model(),
         "phone": jsonData[index]['phone'] if index != -1 and jsonData[index]['phone'] else get_random_phone_number(),
-        "serial_number": None,
+        "serial_number":  jsonData[index]['serial_number'] if index != -1 and jsonData[index]['serial_number'] else None,
         "is_device": False,
         "is_active": False,
     }
     
-def process_email_file(file_path=email_file_path):
+async def process_email_file(file_path=email_file_path):
     try:
         # Đọc file email
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -41,8 +41,6 @@ def process_email_file(file_path=email_file_path):
         # Tạo json_array từ file
         for line in lines:
             parts = line.strip().split('|')
-            print(create_json_object(parts))
-            print("==========")
             json_array.append(create_json_object(parts))
 
         # Cập nhật is_device dựa trên danh sách ld_devices
@@ -55,9 +53,32 @@ def process_email_file(file_path=email_file_path):
         for entry in json_array:
             if not entry.get("is_device"):  # Kiểm tra if is_device là False
                 copy_adb_devices(entry["email"])
+                await asyncio.sleep(15)  # Đợi 14 giây 
+                await asyncio.sleep(2)  # Đợi 2 giây rồi kiểm tra lại
+                await start_ldplayer(entry["email"])
+                serial_number = await wait_for_device_online()
                 set_phone_model(entry["email"], entry["device"])
                 set_phone_number(entry["email"], entry["phone"] )
                 entry['is_device'] = True
+                entry['serial_number'] = serial_number
+                # close_ldplayer(entry["email"])
+                await asyncio.sleep(2)  # Đợi 2 giây rồi kiểm tra lại
+            else:
+                if not entry.get('serial_number'):
+                    await start_ldplayer(entry["email"])
+                    serial_number = await wait_for_device_online()
+                    entry['serial_number'] = serial_number
+                    # close_ldplayer(entry["email"])
+                    # await asyncio.sleep(2)  # Đợi 2 giây rồi kiểm tra lại
+                    print("==============")
+                    print(not entry.get('serial_number'))
+                    print(entry.get('email'))
+                    print(entry.get('serial_number'))
+                    print("==============")
+
+            close_ldplayer(entry["email"])
+            await asyncio.sleep(2)  # Đợi 2 giây 
+                
 
         # Ghi dữ liệu JSON vào file output.json
         json_output = json.dumps(json_array, indent=4)
@@ -74,13 +95,27 @@ def process_email_file(file_path=email_file_path):
         return False  # Trả về False nếu có lỗi
 
 
-## start device thử 
-async def start_ldplayer(email):
-    command = f'{ldconsole_path} launch --name {email}'
-    print(f"Running command: {command}")
-    os.system(command)
+# Function để kiểm tra thiết bị LDPlayer đã online chưa
+async def wait_for_device_online():
+    while True:
+        # Kiểm tra danh sách thiết bị qua adb
+        result = os.popen('adb devices').read()
+        lines = result.splitlines()
     
-# Gọi hàm và kiểm tra kết quả
+        # Tạo mảng chứa tên các thiết bị
+        devices = [line.split()[0] for line in lines if 'device' in line and not line.startswith('List')]
+    
+        if devices:
+            print("Đã khởi động thiết bị")
+            return devices[0]
+        else:
+            print("Đang khởi động thiết bị...")
+            await asyncio.sleep(2)  # Đợi 2 giây rồi kiểm tra lại
+    
+async def main():
+    await process_email_file()
+    # run_devices_multithreaded()
+
+# Chạy hàm chính
 if __name__ == "__main__":
-    success = process_email_file()
-    print(f"Process completed successfully: {success}")
+    asyncio.run(main())

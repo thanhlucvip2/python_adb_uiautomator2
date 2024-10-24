@@ -1,1 +1,30 @@
-[]
+[
+    {
+        "email": "seobaba12345@gmail.com",
+        "password": "AVasfv325t2323",
+        "recovery_mail": "abgva342y34ytakm@tmpmail.org",
+        "proxy": "192.168.1.82:10061",
+        "device": {
+            "manufacturer": "Xiaomi",
+            "model": "23116PN5BC"
+        },
+        "phone": "0899675835",
+        "serial_number": "emulator-5556",
+        "is_device": true,
+        "is_active": false
+    },
+    {
+        "email": "xinbaxinba3@gmail.com",
+        "password": "AVa3t2safg3421",
+        "recovery_mail": "xinbaxinba32t3takm@tmpmail.org",
+        "proxy": "192.168.1.82:10023",
+        "device": {
+            "manufacturer": "Google Phone",
+            "model": "GFE4J"
+        },
+        "phone": "0778639551",
+        "serial_number": "emulator-5558",
+        "is_device": true,
+        "is_active": false
+    }
+]

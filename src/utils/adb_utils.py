@@ -79,3 +79,13 @@ def set_phone_model(email, phone_model):
     command = f'{ldconsole_path} modify --name {email} --manufacturer {phone_model["manufacturer"]} --model {phone_model["model"]}'
     print(f"Running command: {command}")
     os.system(command)
+
+async def start_ldplayer(email):
+    command = f'{ldconsole_path} launch --name {email}'
+    print(f"Running command: {command}")
+    os.system(command)
+
+def close_ldplayer(email):
+    command = f'{ldconsole_path} quit  --name {email}'
+    print(f"Running command: {command}")
+    os.system(command)
