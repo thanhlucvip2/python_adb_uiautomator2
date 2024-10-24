@@ -1,4 +1,9 @@
 import random
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+from src.utils.const import phone_file_path
 
 # Định nghĩa các đầu số của các nhà mạng
 viettel_prefixes = ['086', '096', '097', '098', '032', '033', '034', '035', '036', '037', '038', '039']
@@ -17,6 +22,6 @@ for _ in range(1000):  # Mỗi nhà mạng lấy khoảng 333 số để tổng 
     phone_numbers.append(generate_phone_number(random.choice(vinaphone_prefixes)))
 
 # Ghi danh sách số điện thoại vào file
-with open('phone_numbers.txt', 'w') as f:
+with open(phone_file_path, 'w') as f:
     for number in phone_numbers:
         f.write(number + '\n')

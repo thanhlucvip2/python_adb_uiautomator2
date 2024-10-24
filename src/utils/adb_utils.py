@@ -6,7 +6,7 @@ import json
 import subprocess
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from src.utils.const import model_phone, phone_file_path, ldconsole_path
+from src.utils.const import model_phone, phone_file_path, ldconsole_path, proxy_file_path
 
 def run_adb_devices():
     """
@@ -35,7 +35,6 @@ def save_json_file(file_path, data):
 def get_ld_devices():
     command = f'{ldconsole_path} list'
     result = subprocess.run(command, capture_output=True, text=True, shell=True)
-    print(result)
     return result.stdout.splitlines()  # Trả về danh sách các thiết bị
 
 def copy_adb_devices(email):
@@ -58,6 +57,17 @@ def get_random_phone_number():
         for number in phone_numbers:
             f.write(number + '\n')
     return phone
+
+def get_random_proxy():
+    with open(proxy_file_path, 'r') as f:
+        proxy_data = f.readlines()
+    proxy_data = [proxy.strip() for proxy in proxy_data]
+    proxy = random.choice(proxy_data)
+    proxy_data.remove(proxy)
+    with open(proxy_file_path, 'w') as f:
+        for number in proxy_data:
+            f.write(number + '\n')
+    return proxy
 
 def get_random_manufacturer_and_model():
     manufacturer_data = random.choice(model_phone)

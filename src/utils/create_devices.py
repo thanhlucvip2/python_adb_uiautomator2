@@ -2,7 +2,7 @@ import json
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from src.utils.adb_utils import get_ld_devices, get_random_manufacturer_and_model, get_random_phone_number, set_phone_model, copy_adb_devices, set_phone_number
+from src.utils.adb_utils import get_ld_devices, get_random_manufacturer_and_model, get_random_phone_number, get_random_proxy, set_phone_model, copy_adb_devices, set_phone_number
 from src.utils.revove_devices import remove_nonexistent_devices
 from src.utils.const import output_file_path, email_file_path, ldconsole_path
 
@@ -15,6 +15,21 @@ def find_email_index(email):
             return index
     return -1
 
+
+def create_json_object(parts):
+    index = find_email_index(parts[0])
+    return {
+        "email": parts[0] if len(parts[0]) > 0 else None,
+        "password": parts[1] if len(parts[1]) > 0 else None,
+        "recovery_mail": parts[2] if len(parts[2]) > 0 else None,
+        "proxy":  jsonData[index]['proxy'] if index != -1 and jsonData[index]['proxy'] else get_random_proxy(),
+        "device": jsonData[index]['device'] if index != -1 and jsonData[index]['device'] else get_random_manufacturer_and_model(),
+        "phone": jsonData[index]['phone'] if index != -1 and jsonData[index]['phone'] else get_random_phone_number(),
+        "serial_number": None,
+        "is_device": False,
+        "is_active": False,
+    }
+    
 def process_email_file(file_path=email_file_path):
     try:
         # Đọc file email
@@ -23,24 +38,11 @@ def process_email_file(file_path=email_file_path):
 
         json_array = []
         ld_devices = get_ld_devices()
-
-        def create_json_object(parts):
-            index = find_email_index(parts[0])
-            return {
-                "email": parts[0] if len(parts[0]) > 0 else None,
-                "password": parts[1] if len(parts[1]) > 0 else None,
-                "recovery_mail": parts[2] if len(parts[2]) > 0 else None,
-                "proxy":  parts[3] if len(parts[3]) > 0 else None,
-                "device": jsonData[index]['device'] if index != -1 and jsonData[index]['device'] else get_random_manufacturer_and_model(),
-                "phone":jsonData[index]['phone'] if index != -1 and jsonData[index]['phone'] else get_random_phone_number(),
-                "serial_number": None,
-                "is_device": False,
-                "is_active": False,
-            }
-
         # Tạo json_array từ file
         for line in lines:
             parts = line.strip().split('|')
+            print(create_json_object(parts))
+            print("==========")
             json_array.append(create_json_object(parts))
 
         # Cập nhật is_device dựa trên danh sách ld_devices

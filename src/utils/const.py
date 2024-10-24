@@ -2,6 +2,7 @@ ldconsole_path = 'E:\LDPlayer\LDPlayer9\LDConsole.exe'
 output_file_path = r'src\data\output.json'
 email_file_path = r'src\data\email.txt'
 phone_file_path = r'src\data\phone_numbers.txt'
+proxy_file_path = r'src\data\proxy.txt'
 
 model_phone = [
         {
