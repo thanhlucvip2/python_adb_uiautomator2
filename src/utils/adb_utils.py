@@ -6,8 +6,7 @@ import json
 import subprocess
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from src.utils.const import ldconsole_path
-from src.utils.const import model_phone
+from src.utils.const import model_phone, phone_file_path, ldconsole_path
 
 def run_adb_devices():
     """
@@ -44,19 +43,18 @@ def copy_adb_devices(email):
     print(f"Running command: {command}")
     os.system(command)
 
-
 def set_phone_number(email, phone):
     command = f'{ldconsole_path} modify --name {email} --pnumber {phone}'
     print(f"Running command: {command}")
     os.system(command)
 
 def get_random_phone_number():
-    with open('phone_numbers.txt', 'r') as f:
+    with open(phone_file_path, 'r') as f:
         phone_numbers = f.readlines()
     phone_numbers = [phone.strip() for phone in phone_numbers]
     phone = random.choice(phone_numbers)
     phone_numbers.remove(phone)
-    with open('phone_numbers.txt', 'w') as f:
+    with open(phone_file_path, 'w') as f:
         for number in phone_numbers:
             f.write(number + '\n')
     return phone

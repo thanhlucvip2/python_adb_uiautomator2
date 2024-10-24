@@ -4,8 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from src.utils.adb_utils import get_ld_devices, get_random_manufacturer_and_model, get_random_phone_number, set_phone_model, copy_adb_devices, set_phone_number
 from src.utils.revove_devices import remove_nonexistent_devices
-
-output_file_path = 'output.json'
+from src.utils.const import output_file_path, email_file_path, ldconsole_path
 
 with open(output_file_path, 'r', encoding='utf-8') as json_data:
     jsonData = json.load(json_data)
@@ -16,7 +15,7 @@ def find_email_index(email):
             return index
     return -1
 
-def process_email_file(file_path='./email.txt'):
+def process_email_file(file_path=email_file_path):
     try:
         # Đọc file email
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -34,6 +33,7 @@ def process_email_file(file_path='./email.txt'):
                 "proxy":  parts[3] if len(parts[3]) > 0 else None,
                 "device": jsonData[index]['device'] if index != -1 and jsonData[index]['device'] else get_random_manufacturer_and_model(),
                 "phone":jsonData[index]['phone'] if index != -1 and jsonData[index]['phone'] else get_random_phone_number(),
+                "serial_number": None,
                 "is_device": False,
                 "is_active": False,
             }
@@ -71,6 +71,13 @@ def process_email_file(file_path='./email.txt'):
         print(f"An error occurred: {e}")
         return False  # Trả về False nếu có lỗi
 
+
+## start device thử 
+async def start_ldplayer(email):
+    command = f'{ldconsole_path} launch --name {email}'
+    print(f"Running command: {command}")
+    os.system(command)
+    
 # Gọi hàm và kiểm tra kết quả
 if __name__ == "__main__":
     success = process_email_file()
